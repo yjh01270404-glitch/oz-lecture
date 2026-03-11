@@ -1,0 +1,630 @@
+/* ================================================
+style.css — 개인 소개 웹사이트
+Bootstrap 5 위에 덮어쓰는 커스텀 스타일
+================================================ */
+
+/* ── CSS 변수 ── */
+:root {
+  --ink:        #0d0d0d;
+  --paper:      #f5f2ec;
+  --warm:       #e8e2d6;
+  --dark-bg:    #111108;
+  --dark-card:  #1a1a12;
+  --accent:     #c8a96e;
+  --accent2:    #8fbf7a;
+  --muted:      #888880;
+  --font-serif: 'Noto Serif KR', serif;
+  --font-mono:  'DM Mono', monospace;
+  --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── 기본 초기화 ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-serif);
+  background-color: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── 공통 섹션 ── */
+.section-padding { padding: 100px 0; }
+
+.section-dark {
+  background-color: var(--dark-bg);
+  color: #f0ede6;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* ================================================
+NAVBAR
+================================================ */
+#mainNav {
+  padding: 1rem 0;
+  background: rgba(245, 242, 236, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: var(--transition);
+}
+
+#mainNav.scrolled {
+  border-bottom-color: rgba(200, 169, 110, 0.25);
+  padding: 0.6rem 0;
+}
+
+.navbar-brand {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--ink) !important;
+  letter-spacing: -0.02em;
+}
+
+.dot { color: var(--accent); }
+
+.navbar-nav .nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: var(--ink) !important;
+  opacity: 0.65;
+  transition: opacity 0.2s;
+  text-transform: uppercase;
+}
+
+.navbar-nav .nav-link:hover { opacity: 1; }
+
+/* ================================================
+HERO
+================================================ */
+#hero {
+  min-height: 100vh;
+  padding: 80px 0 40px;  /* 기존 120px 0 80px → 축소 */
+  position: relative;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 70% 60%, rgba(200, 169, 110, 0.12) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.03) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,0,0,0.03) 40px);
+}
+
+.label-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+/* ── hero-title: HTML 버전 기준으로 통일 ── */
+.hero-title {
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.hero-sub {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.hero-sub .divider {
+  color: var(--accent);
+  margin: 0 0.5rem;
+  font-weight: 300;
+}
+
+.hero-desc {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: #555;
+  max-width: 520px;
+}
+
+/* 버튼 */
+.btn-primary-custom {
+  background-color: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 0.7rem 2rem;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.btn-outline-custom {
+  background-color: transparent;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 0.7rem 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-outline-custom:hover {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+/* ── 히어로 뱃지: 밝은 배경에 맞는 흰 뱃지 버전으로 통일 ── */
+.hero-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(200, 169, 110, 0.35);
+  padding: 1.2rem 1.6rem;
+  backdrop-filter: blur(8px);
+  transition: var(--transition);
+}
+
+.hero-badge:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--accent);
+  transform: translateX(-6px);
+}
+
+.hero-badge i {
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+.hero-badge span {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.hero-badge strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+/* 스크롤 힌트 */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scroll-hint span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  50%       { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
+}
+
+/* ================================================
+ABOUT
+================================================ */
+.about-card {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.about-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 1.5rem;
+}
+
+.about-stat:last-child { border-bottom: none; padding-bottom: 0; }
+
+.stat-num {
+  font-family: var(--font-mono);
+  font-size: 3.5rem;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.4;
+}
+
+.about-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.about-body {
+  font-size: 0.97rem;
+  line-height: 1.9;
+  color: #444;
+}
+
+.about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(200, 169, 110, 0.5);
+  color: var(--accent);
+  background: rgba(200, 169, 110, 0.07);
+  text-transform: uppercase;
+}
+
+/* ================================================
+SKILLS
+================================================ */
+.skill-category {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.skill-item {
+  margin-bottom: 1.4rem;
+  font-size: 0.9rem;
+}
+
+.skill-item .d-flex span:last-child {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.82rem;
+}
+
+.skill-track {
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+  display: block;
+}
+
+.skill-fill {
+  display: block;
+  height: 6px;
+  width: 0%;
+  background: linear-gradient(90deg, #c8a96e, #8fbf7a);
+  border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 스킬 바 width */
+.skill-fill[data-width="5"]  { width: 5%;  }
+.skill-fill[data-width="10"] { width: 10%; }
+.skill-fill[data-width="15"] { width: 15%; }
+.skill-fill[data-width="20"] { width: 20%; }
+.skill-fill[data-width="75"] { width: 75%; }
+.skill-fill[data-width="85"] { width: 85%; }
+
+/* ================================================
+CONTACT
+================================================ */
+.contact-intro {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: rgba(240, 237, 230, 0.7);
+  margin-bottom: 2rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 0.9rem;
+  color: rgba(240, 237, 230, 0.75);
+}
+
+.contact-item i {
+  color: var(--accent);
+  font-size: 1.1rem;
+  width: 1.5rem;
+}
+
+.custom-input {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 0 !important;
+  color: #f0ede6 !important;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-serif);
+  transition: var(--transition);
+}
+
+.custom-input::placeholder { color: rgba(240, 237, 230, 0.35) !important; }
+
+.custom-input:focus {
+  box-shadow: none !important;
+  border-color: var(--accent) !important;
+  background: rgba(200, 169, 110, 0.06) !important;
+}
+
+.section-dark .btn-primary-custom {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.section-dark .btn-primary-custom:hover {
+  background-color: #f0ede6;
+  border-color: #f0ede6;
+}
+
+/* ================================================
+FOOTER
+================================================ */
+.site-footer {
+  background-color: #0a0a05;
+  padding: 1.8rem 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer-brand {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  color: #f0ede6;
+}
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(240, 237, 230, 0.35);
+  letter-spacing: 0.05em;
+}
+
+.footer-icons a {
+  color: rgba(240, 237, 230, 0.4);
+  font-size: 1.1rem;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.footer-icons a:hover { color: var(--accent); }
+
+/* ================================================
+AOS 대체 — 페이드 인 애니메이션
+================================================ */
+[data-aos] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+[data-aos].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================================================
+RETROSPECT
+================================================ */
+.retro-card {
+  background: var(--dark-card);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 2.2rem;
+  height: 100%;
+  transition: var(--transition);
+  position: relative;
+}
+
+.retro-card--mid    { background: #141410; border-color: rgba(200, 169, 110, 0.15); }
+.retro-card--bright { background: #111a0e; border-color: rgba(143, 191, 122, 0.2); }
+
+.retro-card:hover { transform: translateY(-4px); }
+
+.retro-num {
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  font-weight: 500;
+  color: rgba(200, 169, 110, 0.15);
+  line-height: 1;
+  margin-bottom: 0.8rem;
+}
+
+.retro-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f0ede6;
+  margin-bottom: 1rem;
+}
+
+.retro-body {
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: rgba(240, 237, 230, 0.6);
+  margin-bottom: 0.8rem;
+}
+
+.retro-body strong { color: var(--accent); }
+
+.retro-quote {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: rgba(240, 237, 230, 0.55);
+  background: rgba(200, 169, 110, 0.05);
+}
+
+.retro-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.retro-list li {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  font-size: 0.85rem;
+  color: rgba(240, 237, 230, 0.6);
+  line-height: 1.65;
+}
+
+.retro-list li i {
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.retro-card--bright .retro-list li i { color: var(--accent2); }
+
+.retro-list code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: rgba(200, 169, 110, 0.1);
+  padding: 1px 5px;
+}
+
+/* ================================================
+반응형
+================================================ */
+@media (max-width: 768px) {
+  .hero-title      { font-size: 1rem; }
+  .about-card      { flex-direction: row; flex-wrap: wrap; }
+  .about-stat      { flex: 1 1 45%; }
+  .scroll-hint     { display: none; }
+  .hero-badge-wrap { flex-direction: row; flex-wrap: wrap; gap: 0.8rem; }
+  .hero-badge      { flex: 1 1 45%; padding: 1rem; }
+}
+
+/* ================================================
+바람개비 배경
+================================================ */
+.pinwheel-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pinwheel {
+  position: absolute;
+  opacity: 0.12;
+}
+
+.pinwheel svg {
+  width: 100%;
+  height: 100%;
+  animation: spin 10s linear infinite;
+  transform-origin: center;
+}
+
+.pinwheel:nth-child(1) {
+  width: 900px; height: 900px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.pinwheel:nth-child(1) svg { animation-duration: 10s; }
+
+.pinwheel:nth-child(2) {
+  width: 350px; height: 350px;
+  top: 5%; right: 3%;
+  opacity: 0.15;
+}
+.pinwheel:nth-child(2) svg { animation-duration: 16s; animation-direction: reverse; }
+
+.pinwheel:nth-child(3) {
+  width: 280px; height: 280px;
+  bottom: 5%; left: 2%;
+  opacity: 0.15;
+}
+.pinwheel:nth-child(3) svg { animation-duration: 7s; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* 모든 섹션 콘텐츠가 바람개비 위에 오도록 */
+#hero .container,
+#hero .scroll-hint,
+#about .container,
+#skills .container,
+#retrospect .container,
+footer .container { 
+  position: relative; 
+  z-index: 1; 
+}
