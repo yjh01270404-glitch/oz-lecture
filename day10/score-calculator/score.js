@@ -49,5 +49,4 @@ switch (grade) {
     console.log("Message: Needs improvement.");
     break;
   default:
-    console.log("Message: Please try harder!");
-}
+    console.log("Message: Please try harder!")
