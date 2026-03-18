@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Countdown Timer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap");
+
+      body {
+        background: #000;
+        overflow: hidden;
+      }
+
+      .container {
+        max-width: 600px;
+        margin-top: 50px;
+        text-align: center;
+      }
+
+      h1 {
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 5px;
+        text-shadow:
+          0 0 10px #00ffff,
+          0 0 20px #00ffff;
+      }
+
+      .form-control {
+        background: #111;
+        border: 1px solid #00ffff;
+        color: #00ffff;
+        text-align: center;
+        font-size: 20px;
+      }
+
+      .btn-primary {
+        background: transparent;
+        border: 2px solid #ff00ff;
+        color: #ff00ff;
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 3px;
+        text-shadow: 0 0 10px #ff00ff;
+        box-shadow: 0 0 15px #ff00ff;
+        transition: all 0.3s;
+      }
+
+      .btn-primary:hover {
+        background: #ff00ff;
+        color: #000;
+        box-shadow: 0 0 40px #ff00ff;
+      }
+
+      #timerDisplay {
+        font-family: "Orbitron", sans-serif;
+        font-size: 180px;
+        font-weight: 900;
+        color: #ff6600;
+        text-shadow:
+          0 0 10px #ff6600,
+          0 0 20px #ff6600,
+          0 0 40px #ff3300,
+          0 0 80px #ff0000,
+          0 0 120px #ff0000;
+        animation: flicker 0.1s infinite alternate;
+        letter-spacing: 10px;
+      }
+
+      @keyframes flicker {
+        0% {
+          opacity: 1;
+          text-shadow:
+            0 0 10px #ff6600,
+            0 0 40px #ff3300,
+            0 0 80px #ff0000;
+        }
+        100% {
+          opacity: 0.92;
+          text-shadow:
+            0 0 20px #ff6600,
+            0 0 60px #ff3300,
+            0 0 100px #ff0000;
+        }
+      }
+
+      .error {
+        color: red;
+        font-family: "Orbitron", sans-serif;
+        font-size: 20px;
+      }
+
+      /* 배경 별 파티클 */
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>카운트다운 타이머</h1>
+      <div class="mb-3">
+        <input
+          type="number"
+          id="timerInput"
+          class="form-control"
+          min="1"
+          max="10"
+          placeholder="1-10초 입력"
+        />
+      </div>
+      <button id="startTimer" class="btn btn-primary">타이머 시작</button>
+      <div id="timerDisplay" class="mt-3"></div>
+    </div>
+    <script src="연습.js"></script>
+    <canvas id="bg"></canvas>
+    <div
+      id="missile-scene"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 999;
+        overflow: hidden;
+      "
+    >
+      <canvas
+        id="explosionCanvas"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"
+      ></canvas>
+      <div
+        id="missile"
+        style="
+          position: absolute;
+          bottom: -100px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 1600px;
+          transition: bottom 2s ease-in;
+        "
+      >
+        🚀
+      </div>
+      <div
+        id="launchText"
+        style="
+          position: absolute;
+          top: 40%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: &quot;Orbitron&quot;, sans-serif;
+          color: #ff0000;
+          font-size: 40px;
+          text-align: center;
+          opacity: 0;
+          text-shadow: 0 0 20px #ff0000;
+        "
+      >
+        ⚠️ LAUNCH DETECTED ⚠️
+      </div>
+      <div
+        id="boomText"
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: &quot;Orbitron&quot;, sans-serif;
+          color: #ff6600;
+          font-size: 80px;
+          text-align: center;
+          opacity: 0;
+          text-shadow: 0 0 40px #ff6600;
+        "
+      >
+        💥 BOOM 💥
+      </div>
+    </div>
+
+    <canvas id="bg"></canvas>
+
+    <script>
+      // 배경 파티클
+      const canvas = document.getElementById("bg");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles = Array.from({ length: 150 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+        color: `hsl(${Math.random() * 60 + 180}, 100%, 60%)`
+      }));
+      function drawBg() {
+        ctx.fillStyle = "rgba(0,0,0,0.1)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        });
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+
+      // 미사일 발사 함수 (타이머 종료시 호출)
+      function launchMissile() {
+        const scene = document.getElementById("missile-scene");
+        const missile = document.getElementById("missile");
+        const launchText = document.getElementById("launchText");
+        const boomText = document.getElementById("boomText");
+        const expCanvas = document.getElementById("explosionCanvas");
+        const expCtx = expCanvas.getContext("2d");
+        expCanvas.width = window.innerWidth;
+        expCanvas.height = window.innerHeight;
+
+        // 씬 보이기
+        scene.style.display = "block";
+        playRocketSound();
+        function playExplosionSound() {
+          const audioCtx = new AudioContext();
+
+          // 폭발 저음 쿵
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          oscillator.type = "sine";
+          oscillator.frequency.setValueAtTime(120, audioCtx.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(
+            20,
+            audioCtx.currentTime + 2
+          );
+          gainNode.gain.setValueAtTime(1.5, audioCtx.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + 2
+          );
+          oscillator.start();
+          oscillator.stop(audioCtx.currentTime + 2);
+
+          // 폭발 노이즈 (쏴아아악)
+          const bufferSize = audioCtx.sampleRate * 3;
+          const buffer = audioCtx.createBuffer(
+            1,
+            bufferSize,
+            audioCtx.sampleRate
+          );
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+          const noiseGain = audioCtx.createGain();
+          noise.connect(noiseGain);
+          noiseGain.connect(audioCtx.destination);
+          noiseGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+          noiseGain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + 3
+          );
+          noise.start();
+          noise.stop(audioCtx.currentTime + 3);
+
+          // 고음 찌지직
+          const oscillator2 = audioCtx.createOscillator();
+          const gainNode2 = audioCtx.createGain();
+          oscillator2.connect(gainNode2);
+          gainNode2.connect(audioCtx.destination);
+          oscillator2.type = "sawtooth";
+          oscillator2.frequency.setValueAtTime(800, audioCtx.currentTime);
+          oscillator2.frequency.exponentialRampToValueAtTime(
+            100,
+            audioCtx.currentTime + 1.5
+          );
+          gainNode2.gain.setValueAtTime(0.8, audioCtx.currentTime);
+          gainNode2.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + 1.5
+          );
+          oscillator2.start();
+          oscillator2.stop(audioCtx.currentTime + 1.5);
+        }
+
+        // LAUNCH 텍스트 깜빡이기
+        let blink = 0;
+        const blinkInterval = setInterval(() => {
+          blink++;
+          launchText.style.opacity = blink % 2 === 0 ? "0" : "1";
+          if (blink > 5) {
+            clearInterval(blinkInterval);
+            launchText.style.opacity = "1";
+
+            // 미사일 발사!
+            setTimeout(() => {
+              missile.style.bottom = "110%";
+              missile.style.fontSize = "300px";
+
+              // 폭발
+              setTimeout(() => {
+                missile.style.display = "none";
+
+                // 폭발 파티클
+                const sparks = Array.from({ length: 300 }, () => ({
+                  x: expCanvas.width / 2,
+                  y: expCanvas.height / 2,
+                  vx: (Math.random() - 0.5) * 20,
+                  vy: (Math.random() - 0.5) * 20,
+                  r: Math.random() * 5 + 2,
+                  color: `hsl(${Math.random() * 60}, 100%, 60%)`,
+                  alpha: 1
+                }));
+
+                function drawExplosion() {
+                  expCtx.fillStyle = "rgba(0,0,0,0.15)";
+                  expCtx.fillRect(0, 0, expCanvas.width, expCanvas.height);
+                  let alive = false;
+                  sparks.forEach((s) => {
+                    if (s.alpha <= 0) return;
+                    alive = true;
+                    expCtx.save();
+                    expCtx.globalAlpha = s.alpha;
+                    expCtx.beginPath();
+                    expCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    expCtx.fillStyle = s.color;
+                    expCtx.fill();
+                    expCtx.restore();
+                    s.x += s.vx;
+                    s.y += s.vy;
+                    s.vy += 0.3;
+                    s.alpha -= 0.015;
+                  });
+                  if (alive) requestAnimationFrame(drawExplosion);
+                }
+                drawExplosion();
+
+                // BOOM 텍스트
+                boomText.style.opacity = "1";
+                boomText.style.transition = "font-size 0.3s";
+                boomText.style.fontSize = "120px";
+                playExplosionSound();
+
+                // 화면 흔들기
+                scene.style.animation = "shake 0.5s";
+
+                // 3초 후 씬 닫기
+                setTimeout(() => {
+                  scene.style.display = "none";
+                  missile.style.bottom = "-100px";
+                  missile.style.fontSize = "80px";
+                  missile.style.display = "block";
+                  boomText.style.opacity = "0";
+                  boomText.style.fontSize = "80px";
+                  launchText.style.opacity = "0";
+                  expCtx.clearRect(0, 0, expCanvas.width, expCanvas.height);
+                }, 3000);
+              }, 2000);
+            }, 500);
+          }
+        }, 300);
+      }
+      function playRocketSound() {
+        const audioCtx = new AudioContext();
+
+        // 1. 점화 직전 삐- 경고음
+        const beep = audioCtx.createOscillator();
+        const beepGain = audioCtx.createGain();
+        beep.connect(beepGain);
+        beepGain.connect(audioCtx.destination);
+        beep.type = "sine";
+        beep.frequency.setValueAtTime(880, audioCtx.currentTime);
+        beepGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        beepGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + 0.3
+        );
+        beep.start(audioCtx.currentTime);
+        beep.stop(audioCtx.currentTime + 0.3);
+
+        // 2. 점화음 (쿵!)
+        const ignite = audioCtx.createOscillator();
+        const igniteGain = audioCtx.createGain();
+        ignite.connect(igniteGain);
+        igniteGain.connect(audioCtx.destination);
+        ignite.type = "sine";
+        ignite.frequency.setValueAtTime(60, audioCtx.currentTime + 0.3);
+        ignite.frequency.exponentialRampToValueAtTime(
+          20,
+          audioCtx.currentTime + 0.8
+        );
+        igniteGain.gain.setValueAtTime(2.0, audioCtx.currentTime + 0.3);
+        igniteGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + 0.8
+        );
+        ignite.start(audioCtx.currentTime + 0.3);
+        ignite.stop(audioCtx.currentTime + 0.8);
+
+        // 3. 엔진 굉음 (낮은 rumble)
+        const rumble = audioCtx.createOscillator();
+        const rumbleGain = audioCtx.createGain();
+        rumble.connect(rumbleGain);
+        rumbleGain.connect(audioCtx.destination);
+        rumble.type = "sawtooth";
+        rumble.frequency.setValueAtTime(55, audioCtx.currentTime + 0.5);
+        rumble.frequency.linearRampToValueAtTime(35, audioCtx.currentTime + 4);
+        rumbleGain.gain.setValueAtTime(0.0, audioCtx.currentTime + 0.5);
+        rumbleGain.gain.linearRampToValueAtTime(
+          0.6,
+          audioCtx.currentTime + 1.0
+        );
+        rumbleGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + 4
+        );
+        rumble.start(audioCtx.currentTime + 0.5);
+        rumble.stop(audioCtx.currentTime + 4);
+
+        // 4. 엔진 노이즈 (쏴아아아)
+        const bufferSize = audioCtx.sampleRate * 4;
+        const buffer = audioCtx.createBuffer(
+          1,
+          bufferSize,
+          audioCtx.sampleRate
+        );
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        // 노이즈 필터 (저음만 통과)
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(400, audioCtx.currentTime);
+        filter.frequency.linearRampToValueAtTime(200, audioCtx.currentTime + 4);
+
+        const noiseGain = audioCtx.createGain();
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        noiseGain.gain.setValueAtTime(0.0, audioCtx.currentTime + 0.5);
+        noiseGain.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 1.2);
+        noiseGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + 4
+        );
+        noise.start(audioCtx.currentTime + 0.5);
+        noise.stop(audioCtx.currentTime + 4);
+
+        // 5. 고주파 찢어지는 소리 (날아가는 느낌)
+        const whistle = audioCtx.createOscillator();
+        const whistleGain = audioCtx.createGain();
+        whistle.connect(whistleGain);
+        whistleGain.connect(audioCtx.destination);
+        whistle.type = "sine";
+        whistle.frequency.setValueAtTime(200, audioCtx.currentTime + 1);
+        whistle.frequency.exponentialRampToValueAtTime(
+          800,
+          audioCtx.currentTime + 3
+        );
+        whistleGain.gain.setValueAtTime(0.0, audioCtx.currentTime + 1);
+        whistleGain.gain.linearRampToValueAtTime(
+          0.15,
+          audioCtx.currentTime + 1.5
+        );
+        whistleGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + 3
+        );
+        whistle.start(audioCtx.currentTime + 1);
+        whistle.stop(audioCtx.currentTime + 3);
+      }
+      // 전역으로 노출
+      window.launchMissile = launchMissile;
+    </script>
+
+    <style>
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        20% {
+          transform: translate(-15px, 10px);
+        }
+        40% {
+          transform: translate(15px, -10px);
+        }
+        60% {
+          transform: translate(-10px, 15px);
+        }
+        80% {
+          transform: translate(10px, -15px);
+        }
+      }
+    </style>
+  </body>
+</html>
