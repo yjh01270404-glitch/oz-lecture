@@ -1,0 +1,17 @@
+{
+  "name": "day37-typescript-basics",
+  "version": "1.0.0",
+  "description": "DAY37: TypeScript 기초 예제",
+  "scripts": {
+    "build": "tsc",
+    "run:01": "npx ts-node 01_basic_types.ts",
+    "run:02": "npx ts-node 02_interface.ts",
+    "run:03": "npx ts-node 03_generics.ts",
+    "run:04": "npx ts-node 04_functions_classes.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.12.12"
+  }
+}
