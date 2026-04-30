@@ -1,15 +1,25 @@
-# DAY43 : MongoDB CRUD
-# OZ 코딩스쿨 - DAY43 : MongoDB CRUD
-# 작성일: 2026-04-30
+"""
+DAY43 : MongoDB CRUD (MongoDB 개요)
+"""
 
-def main():
+from __future__ import annotations
+
+
+def main() -> None:
     print("=== DAY43 : MongoDB CRUD ===")
-    nums = list(range(1, 11))
-    print(f"합계: {sum(nums)}, 평균: {sum(nums)/len(nums)}")
-    info = {"name": "양정호", "course": "OZ 코딩스쿨", "day": 43}
-    for k, v in info.items():
-        print(f"  {k}: {v}")
-    print("\n과제 완료!")
+    print("db.users.insertMany([")
+    print('  {"name": "David", "age": 22, "city": "Daegu"},')
+    print('  {"name": "Alice", "age": 27, "city": "Seoul"},')
+    print('  {"name": "Bob", "age": 31, "city": "Busan"},')
+    print('  {"name": "Carol", "age": 24, "city": "Incheon"},')
+    print('  {"name": "Evan", "age": 29, "city": "Daegu"}')
+    print("])")
+    print("db.users.findOne({ name: 'David' })")
+    print("db.users.find({ age: { $gte: 25 } })")
+    print("db.users.updateOne({ name: 'David' }, { $set: { age: 23 } })")
+    print("db.users.deleteMany({ city: 'Daegu' })")
+    print("db.users.find()")
+
 
 if __name__ == "__main__":
     main()
