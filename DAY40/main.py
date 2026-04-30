@@ -1,15 +1,22 @@
-# DAY40 : ERD 작성
-# OZ 코딩스쿨 - DAY40 : ERD 작성
-# 작성일: 2026-04-23
+"""
+DAY40 : ERD 작성
+"""
 
-def main():
+from __future__ import annotations
+
+
+def main() -> None:
     print("=== DAY40 : ERD 작성 ===")
-    nums = list(range(1, 11))
-    print(f"합계: {sum(nums)}, 평균: {sum(nums)/len(nums)}")
-    info = {"name": "양정호", "course": "OZ 코딩스쿨", "day": 40}
-    for k, v in info.items():
-        print(f"  {k}: {v}")
-    print("\n과제 완료!")
+    print("[도서관 시스템 ERD]")
+    print("- Book: book_id(PK), title, author, isbn, published_year")
+    print("- User: user_id(PK), name, email, phone, joined_date")
+    print("- Loan: loan_id(PK), book_id(FK), user_id(FK), loan_date, return_date")
+    print("- 관계: Book:Loan = 1:N, User:Loan = 1:N")
+    print()
+    print("[팀 프로젝트 ERD]")
+    print("- Shop, Review, User 엔티티")
+    print("- 관계: User 1:N Review, Shop 1:N Review")
+
 
 if __name__ == "__main__":
     main()
