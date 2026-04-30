@@ -1,15 +1,24 @@
-# DAY42 : SQL 쿼리 만들기
-# OZ 코딩스쿨 - DAY42 : SQL 쿼리 만들기
-# 작성일: 2026-04-30
+"""
+DAY42 : SQL 쿼리 만들기 (고급 SQL 및 최적화)
+"""
 
-def main():
+from __future__ import annotations
+
+
+def main() -> None:
     print("=== DAY42 : SQL 쿼리 만들기 ===")
-    nums = list(range(1, 11))
-    print(f"합계: {sum(nums)}, 평균: {sum(nums)/len(nums)}")
-    info = {"name": "양정호", "course": "OZ 코딩스쿨", "day": 42}
-    for k, v in info.items():
-        print(f"  {k}: {v}")
-    print("\n과제 완료!")
+    query = """
+SELECT d.dept_no, d.dept_name, COUNT(e.emp_no) AS emp_count, AVG(s.salary) AS avg_salary
+FROM departments d
+JOIN dept_emp de ON d.dept_no = de.dept_no
+JOIN employees e ON de.emp_no = e.emp_no
+JOIN salaries s ON e.emp_no = s.emp_no
+WHERE de.to_date = '9999-01-01'
+  AND s.to_date = '9999-01-01'
+GROUP BY d.dept_no, d.dept_name;
+""".strip()
+    print(query)
+
 
 if __name__ == "__main__":
     main()
